@@ -1,0 +1,5 @@
+# Connect to the controller
+$connection = Connect-NcController 192.168.1.120 -Credential (Get-Credential -message "Enter credentials for the filer")
+
+# Login via SSH, set privilage level to diag, run the command to show list of 32 bit snapshots, set privilage back to admin and output the previous list to a text file.
+Invoke-NcSsh "set -privilege diagnostic -confirmations off;volume snapshot show -fs-block-format 64-bit -fields create-time;set -privilege admin -confirmations off" | Out-File C:\32-bit-snapshots.txt
