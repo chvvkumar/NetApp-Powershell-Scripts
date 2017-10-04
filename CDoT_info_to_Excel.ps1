@@ -10,8 +10,7 @@
 		A script to export NetApp cluster details to an Excel file.
 		Pre-requisites:
 		1.	Store encrypted password securely in a text file	
-				$password_file = "D:\Scripts\Projects\Storage\creds.txt"
-				$Credential.Password | ConvertFrom-SecureString | Set-Content -Path $password_file
+				read-host -assecurestring | convertfrom-securestring  | Set-Content -Path "D:\Scripts\Projects\Storage\creds.txt"
 		2.	Coltroller list to be listed in the file:
 				$controller_list (In this case d:\Scripts\Projects\Storage\system_list.txt)
 		3.	The "ImportExcel" PowerShell module has to be installed for this script to work. The module can be found here: 
