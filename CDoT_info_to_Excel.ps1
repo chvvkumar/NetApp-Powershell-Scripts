@@ -73,24 +73,24 @@ foreach ($controller in $controllers)
 	Connect-NcController -Name $controller -Credential $mycreds_c | Out-Null
 	Write-Host "Connected to " -NoNewline
 	Write-Host -ForegroundColor yellow "$controller" -NoNewline
-	Write-Host "Gathering Information..."
+	Write-Host " Gathering Information..."
 	$cluster_details = @{
 		Volumes   	= { Get-NcVol  | select Name, Vserver, Aggregate, JunctionPath, Used, State, Dedupe, @{Name="Export Policy"; Expression={ $_.VolumeExportAttributes.Policy } } | sort Name}
 		Aggregates 	= { Get-NcAggr | select AggregateName, Nodes, State, Used, Volumes, Disks, RaidType, RaidSize | sort AggregateName}	
 		Nodes	  	= { Get-NcNode | select Node, IsNodeHealthy, IsNodeClusterEligible, IsEpsilonNode, NodeLocation, NodeModel, NodeNvramId, NodeSerialNumber, NodeStorageConfiguration, NodeSystemId, NodeUptimeTS, ProductVersion, NodeVendor, NvramBatteryStatus, NodeUuid, NodeOwner, EnvFailedFanMessage, EnvFailedPowerSupplyMessage | sort Node }
-		Shares	    	= { get-share_info }
-		Exports	    	= { Get-NcExportRule | select RuleIndex, ClientMatch, Protocol, RoRule, RwRule, PolicyName | sort PolicyName, RuleIndex }
+		Shares	    = { get-share_info }
+		Exports	    = { Get-NcExportRule | select RuleIndex, ClientMatch, Protocol, RoRule, RwRule, PolicyName | sort PolicyName, RuleIndex }
 		SVMs		= { Get-NcVserver | sort vserver, vservertype }
-		Network	    	= { Get-NcNetInterface | select Vserver, InterfaceName, FirewallPolicy, OpStatus, Address, DataProtocols, @{ Name = "DNS Name"; Expression= { [System.Net.Dns]::GetHostByAddress($ipAddress).Hostname } } | sort Vserver, InterfaceName }
+		Network	    = { Get-NcNetInterface | select Vserver, InterfaceName, FirewallPolicy, OpStatus, Address, DataProtocols, @{ Name = "DNS Name"; Expression= { [System.Net.Dns]::GetHostByAddress($ipAddress).Hostname } } | sort Vserver, InterfaceName }
 		SnapMirror 	= { Get-NcSnapmirror }
 	}
 	Write-Host "Generating Excel file for $controller at location " -NoNewline
-	Write-Host -ForegroundColor Green "$report_folder$date $controller.xlsx"
-	Export-MultipleExcelSheets -Show -AutoSize "$report_folder$date $controller.xlsx" $cluster_details
+	Write-Host -ForegroundColor Green "$report_folder$date`_$controller.xlsx"
+	Export-MultipleExcelSheets -Show -AutoSize "$report_folder$date`_$controller.xlsx" $cluster_details
 	Write-Host "Done!"
+    Start-Sleep -Seconds 2
 }
 Write-Host "Press any key to continue..."
 $x = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
-
 
 
