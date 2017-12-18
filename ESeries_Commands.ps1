@@ -58,7 +58,7 @@ for( $i=1; $i -le $LUNCount; $i++){
     if($i % 2 -eq 1 ){
         $owner = "A"
         }
-    elseif($_ % 2 -eq 0 ){
+    elseif($i % 2 -eq 0 ){
         $owner = "B"
         }
     #Construct volume and LUN names with 0 padding to the left
