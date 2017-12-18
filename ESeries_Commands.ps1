@@ -1,3 +1,36 @@
+<#
+.SYNOPSIS
+    This script creates command files to create and manage NetApp E-Series storage.
+.DESCRIPTION
+    The following functions are currently supported:
+
+    1. Generate LUN commands to create LUNs with the following format:
+        show "Creating volume 001 on disk pool Disk_Pool_1.";
+        //This command creates volume <001> on disk pool <Disk_Pool_1>.
+        create volume diskPool="Disk_Pool_1" userLabel="001" owner=A capacity=5.55 TB dataAssurance=enabled mapping=none;
+        show "Setting additional attributes for volume 001.";
+        // Configuration settings that can not be set during Volume creation.
+        set volume["001"] cacheWithoutBatteryEnabled=false;
+        set volume["001"] cacheFlushModifier=5;
+        set volume["001"] cacheWithoutBatteryEnabled=false;
+        set volume["001"] mirrorEnabled=true;
+        set volume["001"] readCacheEnabled=true;
+        set volume["001"] writeCacheEnabled=true;
+        set volume["001"] mediaScanEnabled=true;
+        set volume["001"] redundancyCheckEnabled=false;
+
+    2. Assign the LUNs to Volumes with the below commands:
+        show "Creating Volume-to-LUN Mapping for Volume 001 to LUN 001 under Host Example_host_group.";
+        set volume ["001"] logicalUnitNumber=001 host="Example_host_group";.PARAMETER <Parameter_Name>
+
+.NOTES
+  Version:        1.5
+  Purpose/Change: Initial script development
+  
+#>
+
+
+
 clear-host
 #Location where command files will be saved
 set-location D:\Scripts\eseries
