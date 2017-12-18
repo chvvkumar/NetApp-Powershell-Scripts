@@ -29,8 +29,6 @@
   
 #>
 
-
-
 clear-host
 #Location where command files will be saved
 set-location D:\Scripts\eseries
@@ -43,6 +41,7 @@ if(Test-Path -Path .\ControllerB.txt)
 if(Test-Path -Path .\vol_to_LUN_commands.txt)
     {Remove-Item .\vol_to_LUN_commands.txt}
 
+#Storage Parameters. Change these values and names according to your requirements
 #LUN Size
 $capacity_TB = 5.55
 #Number of disk pools to create
