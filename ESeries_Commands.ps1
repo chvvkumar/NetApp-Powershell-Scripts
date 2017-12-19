@@ -33,7 +33,7 @@ clear-host
 #Location where command files will be saved
 set-location D:\Scripts\eseries
 $location = Get-Location
-#Checks if there are previous text files in the output location and deletes tham to create new files. It may be a good idea to backup previous files if you need to keep older commands
+#Checks if there are previous text files in the output location and deletes these existing files to create new files. It may be a good idea to backup previous files if you need to keep older commands
 if(Test-Path -Path .\ControllerA.txt)
     {Remove-Item .\ControllerA.txt}
 if(Test-Path -Path .\ControllerB.txt)
