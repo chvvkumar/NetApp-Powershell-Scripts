@@ -60,6 +60,8 @@ function get-share_info
 	$mixedshares
 	return
 }
+
+
 #	Main Block
 $date = Get-Date -format MM.dd.yy
 clear-host
