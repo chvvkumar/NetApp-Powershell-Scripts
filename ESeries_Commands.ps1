@@ -12,7 +12,6 @@
         // Configuration settings that can not be set during Volume creation.
         set volume["001"] cacheWithoutBatteryEnabled=false;
         set volume["001"] cacheFlushModifier=5;
-        set volume["001"] cacheWithoutBatteryEnabled=false;
         set volume["001"] mirrorEnabled=true;
         set volume["001"] readCacheEnabled=true;
         set volume["001"] writeCacheEnabled=true;
@@ -72,7 +71,6 @@ for( $i=1; $i -le $LUNCount; $i++){
     "// Configuration settings that can not be set during Volume creation." | out-file Controller$owner.txt -append -noclobber
     "set volume[`"$volume`"] cacheWithoutBatteryEnabled=false;" | out-file Controller$owner.txt -append -noclobber
     "set volume[`"$volume`"] cacheFlushModifier=5;" | out-file Controller$owner.txt -append -noclobber
-    "set volume[`"$volume`"] cacheWithoutBatteryEnabled=false;" | out-file Controller$owner.txt -append -noclobber
     "set volume[`"$volume`"] mirrorEnabled=true;" | out-file Controller$owner.txt -append -noclobber
     "set volume[`"$volume`"] readCacheEnabled=true;" | out-file Controller$owner.txt -append -noclobber
     "set volume[`"$volume`"] writeCacheEnabled=true;" | out-file Controller$owner.txt -append -noclobber
