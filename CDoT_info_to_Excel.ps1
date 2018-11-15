@@ -91,5 +91,6 @@ foreach ($controller in $controllers)
     Write-Host "Done!"
     Start-Sleep -Seconds 2
 }
+
 Write-Host "Press any key to continue..."
 $x = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
