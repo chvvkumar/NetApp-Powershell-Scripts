@@ -84,8 +84,8 @@ Write-Host "Cloning parent volume: $($parent_volume) to new volume: $($clone_old
 
 # mount new clone to old junction path
 Mount-NcVol -Name $clone_volume -JunctionPath $clone_volume.JunctionPath -VserverContext $vserver | Out-Null
-Write-Host "Mounted new clone to junction-path: $(get-ncvol $clone_volume).JunctionPath"
+Write-Host "Mounted new clone to junction-path: $((get-ncvol $clone_volume).JunctionPath)"
 
 # modify export policy
 Update-NcVol -query @{name="$clone_old"} -Attributes @{volumeexportattributes=@{policy="$clone_export_policy"}} | Out-Null
-Write-Host "Modified export policy of: $($clone_old) to: $(get-ncvol $clone_volume).VolumeExportAttributes.Policy"
+Write-Host "Modified export policy of: $($clone_old) to: $((get-ncvol $clone_volume).VolumeExportAttributes.Policy)"
