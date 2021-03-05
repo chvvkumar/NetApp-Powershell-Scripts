@@ -1,16 +1,26 @@
 Param(
-   [Parameter(Mandatory=$True, HelpMessage="The Cluster name or IP Address")]
+   [Parameter(Mandatory=$True, HelpMessage=" Cluster name or IP Address")]
    [String]$Cluster,
-   [Parameter(Mandatory=$True, HelpMessage="The vserver name")]
+
+   [Parameter(Mandatory=$True, HelpMessage=" vserver name")]
    [String]$vserver,
-   [Parameter(Mandatory=$True, HelpMessage="The Parent volume name")]
+   
+   [Parameter(Mandatory=$True, HelpMessage=" Parent volume name")]
    [String]$parent_volume,
-   [Parameter(Mandatory=$True, HelpMessage="The Clone volume name")]
+   
+   [Parameter(Mandatory=$True, HelpMessage=" Clone volume name")]
    [String]$clone_old,
-   [Parameter(Mandatory=$True, HelpMessage="The Clone Export Policy")]
+   
+   [Parameter(Mandatory=$True, HelpMessage=" Clone Export Policy")]
    [String]$clone_export_policy,
-   [Parameter(Mandatory=$True, HelpMessage="The Snapshot Name")]
+   
+   [Parameter(Mandatory=$True, HelpMessage=" Snapshot Name")]
    [String]$snapshot,
+   
+   [Parameter(Mandatory=$True, HelpMessage="Environment to Refresh (Only enter snd/dev/tst")]
+   [ValidateSet("snd","dev","tst")]
+   [String]$environment,
+   
    [Parameter(Mandatory=$True, HelpMessage="The Credential to connect to the cluster")]
    [System.Management.Automation.PSCredential]$Credential   
 )
@@ -40,7 +50,12 @@ Try{
 $parent_volume = Get-NcVol -Name $parent_volume
 $clone_volume  = Get-NcVol -Name $clone_old
 $datenow = (get-date).ToUniversalTime().ToString('yyyyMMddHHmm')
-
+switch ($environment) {
+    "snd" { $clone_export_policy = "snd" }
+    "dev" { $clone_export_policy = "dev" }
+    "tst" { $clone_export_policy = "tst" }
+    default {  throw "Invalid Environment Provided"}
+}
 # name for existing clone to be renamed
 $clone_old_renamed = "offlined_$($datenow)_$clone_old"
 
