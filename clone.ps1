@@ -1,63 +1,27 @@
-Param(
-   [Parameter(Mandatory=$True, HelpMessage=" Cluster name or IP Address")]
-   [String]$Cluster,
-
-   [Parameter(Mandatory=$True, HelpMessage=" vserver name")]
-   [String]$vserver,
-   
-   [Parameter(Mandatory=$True, HelpMessage=" Parent volume name")]
-   [String]$parent_volume,
-   
-   [Parameter(Mandatory=$True, HelpMessage=" Clone volume name")]
-   [String]$clone_old,
-   
-   [Parameter(Mandatory=$True, HelpMessage=" Clone Export Policy")]
-   [String]$clone_export_policy,
-   
-   [Parameter(Mandatory=$True, HelpMessage=" Snapshot Name")]
-   [String]$snapshot,
-   
-   [Parameter(Mandatory=$True, HelpMessage="Environment to Refresh (Only enter snd/dev/tst")]
-   [ValidateSet("snd","dev","tst")]
-   [String]$environment,
-   
-   [Parameter(Mandatory=$True, HelpMessage="The Credential to connect to the cluster")]
-   [System.Management.Automation.PSCredential]$Credential   
-)
-#'------------------------------------------------------------------------------
-#'Import the PSTK.
-#'------------------------------------------------------------------------------
-[String]$moduleName = "DataONTAP"
-Try{
-   Import-Module -Name $moduleName
-   Write-Host "Imported module ""$moduleName"""
-}Catch{
-   Write-Warning -Message $("Failed importing module ""$moduleName"". Error " + $_.Exception.Message)
-   Break;
-}
-#'------------------------------------------------------------------------------
-#'Connect to the cluster.
-#'------------------------------------------------------------------------------
-Try{
-   Connect-NcController -Name $Cluster -HTTPS -Credential $Credential -ErrorAction Stop | Out-Null
-   Write-Host "Connected to cluster ""$Cluster"""
-}Catch{
-   Write-Warning -Message $("Failed connecting to cluster ""$Cluster"". Error " + $_.Exception.Message)
-   Break;
-}
+$vserver = "svm01"
+$parent_volume = "original"
+$clone_old = "clone_1"
+$clone_export_policy = "clonepolicy"
+$snapshot = "snapshot1"
+$environment = "dev"
 
 
+# Get parent and clone details
 $parent_volume = Get-NcVol -Name $parent_volume
 $clone_volume  = Get-NcVol -Name $clone_old
+
+# Create rename string
 $datenow = (get-date).ToUniversalTime().ToString('yyyyMMddHHmm')
+
+# Select environment to clone to
 switch ($environment) {
     "snd" { $clone_export_policy = "snd" }
     "dev" { $clone_export_policy = "dev" }
     "tst" { $clone_export_policy = "tst" }
-    default {  throw "Invalid Environment Provided"}
+    default {  throw "Invalid Environment Provided."}
 }
 # name for existing clone to be renamed
-$clone_old_renamed = "offlined_$($datenow)_$clone_old"
+$clone_old_renamed = "offlined_$($datenow)_$(($clone_volume).name)"
 
 # Unmount existing clone
 Dismount-NcVol -Name $clone_old -VserverContext $vserver | Out-Null
