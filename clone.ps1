@@ -1,8 +1,41 @@
-$vserver = "svm01"
-$parent_volume = "original"
-$clone_old = "clone_1"
-$clone_export_policy = "clonepolicy"
-$snapshot = "snapshot1"
+Param(
+   [Parameter(Mandatory=$True, HelpMessage="The Cluster name or IP Address")]
+   [String]$Cluster,
+   [Parameter(Mandatory=$True, HelpMessage="The vserver name")]
+   [String]$vserver,
+   [Parameter(Mandatory=$True, HelpMessage="The Parent volume name")]
+   [String]$parent_volume,
+   [Parameter(Mandatory=$True, HelpMessage="The Clone volume name")]
+   [String]$clone_old,
+   [Parameter(Mandatory=$True, HelpMessage="The Clone Export Policy")]
+   [String]$clone_export_policy,
+   [Parameter(Mandatory=$True, HelpMessage="The Snapshot Name")]
+   [String]$snapshot,
+   [Parameter(Mandatory=$True, HelpMessage="The Credential to connect to the cluster")]
+   [System.Management.Automation.PSCredential]$Credential   
+)
+#'------------------------------------------------------------------------------
+#'Import the PSTK.
+#'------------------------------------------------------------------------------
+[String]$moduleName = "DataONTAP"
+Try{
+   Import-Module -Name $moduleName
+   Write-Host "Imported module ""$moduleName"""
+}Catch{
+   Write-Warning -Message $("Failed importing module ""$moduleName"". Error " + $_.Exception.Message)
+   Break;
+}
+#'------------------------------------------------------------------------------
+#'Connect to the cluster.
+#'------------------------------------------------------------------------------
+Try{
+   Connect-NcController -Name $Cluster -HTTPS -Credential $Credential -ErrorAction Stop | Out-Null
+   Write-Host "Connected to cluster ""$Cluster"""
+}Catch{
+   Write-Warning -Message $("Failed connecting to cluster ""$Cluster"". Error " + $_.Exception.Message)
+   Break;
+}
+
 
 $parent_volume = Get-NcVol -Name $parent_volume
 $clone_volume  = Get-NcVol -Name $clone_old
