@@ -5,15 +5,6 @@ Param(
    [Parameter(Mandatory=$True, HelpMessage=" vserver name")]
    [String]$vserver,
    
-   [Parameter(Mandatory=$True, HelpMessage=" Parent volume name")]
-   [String]$parent_volume,
-   
-   [Parameter(Mandatory=$True, HelpMessage=" Clone volume name")]
-   [String]$clone_old,
-   
-   [Parameter(Mandatory=$True, HelpMessage=" Clone Export Policy")]
-   [String]$clone_export_policy,
-   
    [Parameter(Mandatory=$True, HelpMessage=" Snapshot Name")]
    [String]$snapshot,
    
@@ -46,20 +37,33 @@ Try{
    Break;
 }
 
+# Select environment to clone to
+switch ($environment) {
+    "snd" { 
+        $clone_old = "original_snd"
+        $clone_export_policy = "snd" 
+    }
+    "dev" { 
+        $clone_old = "original_dev"   
+        $clone_export_policy = "dev" 
+    }
+    "tst" { 
+        $clone_old = "original_tst"  
+        $clone_export_policy = "tst" 
+    }
+    default {  
+        throw "Invalid Environment Provided."
+    }
+}
 # Get parent and clone details
+$parent_volume = "original"
 $parent_volume = Get-NcVol -Name $parent_volume
 $clone_volume  = Get-NcVol -Name $clone_old
 
 # Create rename string
 $datenow = (get-date).ToUniversalTime().ToString('yyyyMMddHHmm')
 
-# Select environment to clone to
-switch ($environment) {
-    "snd" { $clone_export_policy = "snd" }
-    "dev" { $clone_export_policy = "dev" }
-    "tst" { $clone_export_policy = "tst" }
-    default {  throw "Invalid Environment Provided."}
-}
+
 # name for existing clone to be renamed
 $clone_old_renamed = "offlined_$($datenow)_$(($clone_volume).name)"
 
