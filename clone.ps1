@@ -1,10 +1,50 @@
-$vserver = "svm01"
-$parent_volume = "original"
-$clone_old = "clone_1"
-$clone_export_policy = "clonepolicy"
-$snapshot = "snapshot1"
-$environment = "dev"
+Param(
+   [Parameter(Mandatory=$True, HelpMessage=" Cluster name or IP Address")]
+   [String]$Cluster,
 
+   [Parameter(Mandatory=$True, HelpMessage=" vserver name")]
+   [String]$vserver,
+   
+   [Parameter(Mandatory=$True, HelpMessage=" Parent volume name")]
+   [String]$parent_volume,
+   
+   [Parameter(Mandatory=$True, HelpMessage=" Clone volume name")]
+   [String]$clone_old,
+   
+   [Parameter(Mandatory=$True, HelpMessage=" Clone Export Policy")]
+   [String]$clone_export_policy,
+   
+   [Parameter(Mandatory=$True, HelpMessage=" Snapshot Name")]
+   [String]$snapshot,
+   
+   [Parameter(Mandatory=$True, HelpMessage="Environment to Refresh (Only enter snd/dev/tst")]
+   [ValidateSet("snd","dev","tst")]
+   [String]$environment,
+   
+   [Parameter(Mandatory=$True, HelpMessage="The Credential to connect to the cluster")]
+   [System.Management.Automation.PSCredential]$Credential   
+)
+#'------------------------------------------------------------------------------
+#'Import the PSTK.
+#'------------------------------------------------------------------------------
+[String]$moduleName = "DataONTAP"
+Try{
+   Import-Module -Name $moduleName
+   Write-Host "Imported module ""$moduleName"""
+}Catch{
+   Write-Warning -Message $("Failed importing module ""$moduleName"". Error " + $_.Exception.Message)
+   Break;
+}
+#'------------------------------------------------------------------------------
+#'Connect to the cluster.
+#'------------------------------------------------------------------------------
+Try{
+   Connect-NcController -Name $Cluster -HTTPS -Credential $Credential -ErrorAction Stop | Out-Null
+   Write-Host "Connected to cluster ""$Cluster"""
+}Catch{
+   Write-Warning -Message $("Failed connecting to cluster ""$Cluster"". Error " + $_.Exception.Message)
+   Break;
+}
 
 # Get parent and clone details
 $parent_volume = Get-NcVol -Name $parent_volume
