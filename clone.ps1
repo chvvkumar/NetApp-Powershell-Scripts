@@ -90,6 +90,6 @@ Write-Host "Mounted new clone to junction-path: $((get-ncvol $clone_volume).Junc
 Update-NcVol -query @{name="$clone_old"} -Attributes @{volumeexportattributes=@{policy="$clone_export_policy"}} | Out-Null
 Write-Host "Modified export policy of: $($clone_old) to: $((get-ncvol $clone_volume).VolumeExportAttributes.Policy)"
 
-# Split the clone off
+# Split the clone
 Start-NcVolCloneSplit -VserverContext $vserver -Name $clone_old | Out-Null
 Write-Host "Splitting: $($clone_old) from: $($parent_volume)"
